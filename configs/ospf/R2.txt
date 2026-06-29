@@ -1,0 +1,52 @@
+! ====================================================================
+! OSPF COMPARISON BUILD  -- R2   (ABR: area 0 <-> area 1)
+! Mirrors the IS-IS L1/L2 boundary role.
+! ====================================================================
+hostname R2
+!
+interface Loopback0
+ ipv4 address 2.2.2.2 255.255.255.255
+!
+interface GigabitEthernet0/0/0/0          ! to R1  (area 1)
+ ipv4 address 10.12.0.2 255.255.255.252
+!
+interface GigabitEthernet0/0/0/1          ! to R3  (area 0)
+ ipv4 address 10.23.0.1 255.255.255.252
+!
+interface GigabitEthernet0/0/0/3          ! to R4  (area 0)
+ ipv4 address 10.24.0.1 255.255.255.252
+!
+router ospf 1
+ router-id 2.2.2.2
+ ! --- backbone area 0 ---
+ area 0
+  interface Loopback0
+   passive enable
+  !
+  interface GigabitEthernet0/0/0/1
+   network point-to-point
+   cost 10
+   bfd fast-detect
+   bfd minimum-interval 50
+   bfd multiplier 3
+  !
+  interface GigabitEthernet0/0/0/3
+   network point-to-point
+   cost 10
+   bfd fast-detect
+   bfd minimum-interval 50
+   bfd multiplier 3
+  !
+ !
+ ! --- area 1 (toward R1) — this router is the ABR ---
+ area 1
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+   cost 10
+   bfd fast-detect
+   bfd minimum-interval 50
+   bfd multiplier 3
+  !
+ !
+!
+end

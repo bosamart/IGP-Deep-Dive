@@ -1,0 +1,94 @@
+! ====================================================================
+! R3 - IS-IS Level-1-2 (boundary)  |  Area 49.0001  |  Loopback0 3.3.3.3/32
+! ---------------------------------------------------------------
+! Mirror of R2: the second L1/L2 boundary, giving R1 a redundant path into the
+! backbone and a second leaker for 4.4.4.4/32.
+! Phase 3 : L1 toward R1/R2 (area 0001), L2 toward R4 (area 0002)
+! Phase 4 : leak 4.4.4.4/32 from L2 into L1
+! Phase 5 : BFD, LFA, SPF throttle, LSP authentication
+! NOTE: new XR interfaces may come up admin-down -- 'no shutdown' when pasting.
+! ====================================================================
+hostname R3
+!
+key chain ISIS-KEY
+ key 1
+  key-string cisco123
+  cryptographic-algorithm HMAC-MD5
+ !
+!
+prefix-set LEAKED-FROM-L2
+  4.4.4.4/32
+end-set
+!
+route-policy LEAK-L2-TO-L1
+  if destination in LEAKED-FROM-L2 then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+! ===== Interfaces =====
+interface Loopback0
+ ipv4 address 3.3.3.3 255.255.255.255
+!
+interface GigabitEthernet0/0/0/0          ! to R2 (cross-link, L1+L2, area 0001)
+ ipv4 address 10.23.0.2 255.255.255.252
+!
+interface GigabitEthernet0/0/0/2          ! to R1 (L1, area 0001)
+ ipv4 address 10.13.0.2 255.255.255.252
+!
+interface GigabitEthernet0/0/0/4          ! to R4 (L2-only, to area 0002)
+ ipv4 address 10.34.0.1 255.255.255.252
+!
+! ===== IS-IS =====
+router isis CORE
+ is-type level-1-2
+ net 49.0001.0000.0000.0003.00
+ lsp-password keychain ISIS-KEY level 1
+ lsp-password keychain ISIS-KEY level 2
+ address-family ipv4 unicast
+  metric-style wide
+  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  lsp-gen-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  propagate level 2 into level 1 route-policy LEAK-L2-TO-L1
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  bfd fast-detect ipv4
+  bfd minimum-interval 50
+  bfd multiplier 3
+  address-family ipv4 unicast
+   metric 10
+   fast-reroute per-prefix
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  point-to-point
+  circuit-type level-1
+  bfd fast-detect ipv4
+  bfd minimum-interval 50
+  bfd multiplier 3
+  address-family ipv4 unicast
+   metric 10
+   fast-reroute per-prefix
+  !
+ !
+ interface GigabitEthernet0/0/0/4
+  point-to-point
+  circuit-type level-2-only
+  bfd fast-detect ipv4
+  bfd minimum-interval 50
+  bfd multiplier 3
+  address-family ipv4 unicast
+   metric 10
+   fast-reroute per-prefix
+  !
+ !
+!
+end

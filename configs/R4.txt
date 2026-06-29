@@ -1,0 +1,69 @@
+! ====================================================================
+! R4 - IS-IS Level-1-2  |  Area 49.0002  |  Loopback0 4.4.4.4/32
+! ---------------------------------------------------------------
+! R4 sits alone in a SECOND area (49.0002). Its links to R2 and R3 cross an area
+! boundary, so they form L2-ONLY adjacencies (the backbone). R4 injects its own
+! loopback (4.4.4.4/32) into L2; R2/R3 then leak it down into L1 (Phase 4) so the
+! L1-only R1 can reach it optimally.
+! Phase 3 : separate area, L2-only links to the backbone
+! Phase 5 : BFD, LFA, SPF throttle, LSP authentication
+! NOTE: new XR interfaces may come up admin-down -- 'no shutdown' when pasting.
+! ====================================================================
+hostname R4
+!
+key chain ISIS-KEY
+ key 1
+  key-string cisco123
+  cryptographic-algorithm HMAC-MD5
+ !
+!
+! ===== Interfaces =====
+interface Loopback0
+ ipv4 address 4.4.4.4 255.255.255.255
+!
+interface GigabitEthernet0/0/0/2          ! to R2 (L2-only)
+ ipv4 address 10.24.0.2 255.255.255.252
+!
+interface GigabitEthernet0/0/0/3          ! to R3 (L2-only)
+ ipv4 address 10.34.0.2 255.255.255.252
+!
+! ===== IS-IS =====
+router isis CORE
+ is-type level-1-2                        ! L1 for its own (empty) area + L2 backbone
+ net 49.0002.0000.0000.0004.00            ! DIFFERENT area: 49.0002
+ lsp-password keychain ISIS-KEY level 1
+ lsp-password keychain ISIS-KEY level 2
+ address-family ipv4 unicast
+  metric-style wide
+  spf-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+  lsp-gen-interval maximum-wait 5000 initial-wait 50 secondary-wait 200
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  point-to-point
+  circuit-type level-2-only                ! cross-area => backbone only
+  bfd fast-detect ipv4
+  bfd minimum-interval 50
+  bfd multiplier 3
+  address-family ipv4 unicast
+   metric 10
+   fast-reroute per-prefix
+  !
+ !
+ interface GigabitEthernet0/0/0/3
+  point-to-point
+  circuit-type level-2-only
+  bfd fast-detect ipv4
+  bfd minimum-interval 50
+  bfd multiplier 3
+  address-family ipv4 unicast
+   metric 10
+   fast-reroute per-prefix
+  !
+ !
+!
+end
