@@ -78,6 +78,8 @@ Want the OSPF comparison? Wipe IS-IS and paste [`configs/ospf/`](configs/ospf/) 
                 +---------+
 ```
 
+![IGP-Deep-Dive topology](diagrams/topology.svg)
+
 - **R1** — Level-1 only, area 49.0001. Sees only its area; reaches everything else via a default
   route (the *attached bit*) — until Phase 4 leaks the specifics it needs.
 - **R2, R3** — Level-1-2 boundary routers. L1 toward R1 and each other; L2 toward R4. They are the
