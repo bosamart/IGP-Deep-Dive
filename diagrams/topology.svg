@@ -1,0 +1,58 @@
+<svg width="680" height="485" viewBox="0 0 680 485" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>IGP-Deep-Dive lab topology</title>
+<desc>Diamond topology of R1 through R4. R1, R2, R3 sit in IS-IS area 49.0001 (Level 1); R1 is Level-1-only, R2 and R3 are Level-1-2 boundary routers. R4 sits alone in area 49.0002, reachable only across the Level-2 backbone through R2 and R3.</desc>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #2c2c2a; }
+  .th { font-size: 14px; font-weight: 700; }
+  .ts { font-size: 12px; fill: #5f5e5a; }
+</style>
+
+<rect x="50" y="40" width="580" height="250" rx="8" fill="none" stroke="#b4b2a9" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="65" y="58">Area 49.0001 (Level 1)</text>
+
+<rect x="230" y="330" width="220" height="100" rx="8" fill="none" stroke="#b4b2a9" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="245" y="348">Area 49.0002</text>
+
+<line x1="300" y1="126" x2="230" y2="180" stroke="#5f5e5a" stroke-width="1"/>
+<line x1="380" y1="126" x2="450" y2="180" stroke="#5f5e5a" stroke-width="1"/>
+<line x1="250" y1="208" x2="430" y2="208" stroke="#5f5e5a" stroke-width="2"/>
+<line x1="210" y1="236" x2="300" y2="350" stroke="#5f5e5a" stroke-width="1" stroke-dasharray="5 3"/>
+<line x1="470" y1="236" x2="380" y2="350" stroke="#5f5e5a" stroke-width="1" stroke-dasharray="5 3"/>
+
+<text class="ts" x="250" y="150" text-anchor="middle">L1</text>
+<text class="ts" x="430" y="150" text-anchor="middle">L1</text>
+<text class="ts" x="340" y="198" text-anchor="middle">L1+L2</text>
+<text class="ts" x="230" y="290" text-anchor="middle">L2</text>
+<text class="ts" x="450" y="290" text-anchor="middle">L2</text>
+
+<g>
+<rect x="260" y="70" width="160" height="56" rx="8" fill="#F1EFE8" stroke="#5f5e5a" stroke-width="0.5"/>
+<text class="th" x="340" y="94" text-anchor="middle">R1</text>
+<text class="ts" x="340" y="112" text-anchor="middle">1.1.1.1 &#183; L1-only</text>
+</g>
+
+<g>
+<rect x="90" y="180" width="160" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="th" x="170" y="204" text-anchor="middle">R2</text>
+<text class="ts" x="170" y="222" text-anchor="middle">2.2.2.2 &#183; L1-2</text>
+</g>
+
+<g>
+<rect x="430" y="180" width="160" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="th" x="510" y="204" text-anchor="middle">R3</text>
+<text class="ts" x="510" y="222" text-anchor="middle">3.3.3.3 &#183; L1-2</text>
+</g>
+
+<g>
+<rect x="260" y="350" width="160" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text class="th" x="340" y="374" text-anchor="middle">R4</text>
+<text class="ts" x="340" y="392" text-anchor="middle">4.4.4.4 &#183; L1-2</text>
+</g>
+
+<rect x="60" y="445" width="14" height="14" rx="3" fill="#F1EFE8" stroke="#5f5e5a" stroke-width="0.5"/>
+<text class="ts" x="80" y="456">L1-only</text>
+<rect x="190" y="445" width="14" height="14" rx="3" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="ts" x="210" y="456">L1-2 boundary</text>
+<rect x="340" y="445" width="14" height="14" rx="3" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+<text class="ts" x="360" y="456">L1-2, area 49.0002</text>
+</svg>
