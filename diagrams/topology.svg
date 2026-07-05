@@ -2,23 +2,57 @@
 <title>IGP-Deep-Dive lab topology</title>
 <desc>Diamond topology of R1 through R4. R1, R2, R3 sit in IS-IS area 49.0001 (Level 1); R1 is Level-1-only, R2 and R3 are Level-1-2 boundary routers. R4 sits alone in area 49.0002, reachable only across the Level-2 backbone through R2 and R3.</desc>
 <style>
-  text { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; fill: #2c2c2a; }
-  .th { font-size: 14.5px; font-weight: 700; }
-  .ts { font-size: 12px; fill: #6b6a65; }
-  .area-label { font-size: 12.5px; fill: #6b6a65; }
+  /* ---- Light theme (default) ---- */
+  .bg        { fill: #ffffff; }
+  text       { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .th        { font-size: 14.5px; font-weight: 700; fill: #1a1a1a; }
+  .ts        { font-size: 12px; fill: #555555; }
+  .area-label{ font-size: 12.5px; fill: #6b6a65; }
+  .area-box  { fill: none; stroke: #a8a69c; stroke-width: 0.9; stroke-dasharray: 5 4; }
+  .link      { stroke: #555555; stroke-width: 1.5; }
+  .link-bb   { stroke: #222222; stroke-width: 2.75; }
+  .link-l2   { stroke: #555555; stroke-width: 1.5; stroke-dasharray: 6 4; }
+
+  .r1-box { fill: #ECEAE2; stroke: #8a8880; stroke-width: 1; }
+  .r1-h   { fill: #1a1a1a; } .r1-s { fill: #555555; }
+  .r23-box{ fill: #DCF3EA; stroke: #12876a; stroke-width: 1; }
+  .r23-h  { fill: #085041; } .r23-s { fill: #0f6e56; }
+  .r4-box { fill: #E9E7FD; stroke: #6b62c9; stroke-width: 1; }
+  .r4-h   { fill: #26215c; } .r4-s { fill: #3c3489; }
+
+  /* ---- Dark theme ---- */
+  @media (prefers-color-scheme: dark) {
+    .bg        { fill: #0d1117; }
+    .th        { fill: #e6edf3; }
+    .ts        { fill: #9aa4b0; }
+    .area-label{ fill: #8b949e; }
+    .area-box  { stroke: #6e7681; }
+    .link      { stroke: #8b949e; }
+    .link-bb   { stroke: #e6edf3; }
+    .link-l2   { stroke: #8b949e; }
+
+    .r1-box { fill: #2b2820; stroke: #b8b295; }
+    .r1-h   { fill: #f0ede2; } .r1-s { fill: #c9c4b3; }
+    .r23-box{ fill: #0f342a; stroke: #3fb98f; }
+    .r23-h  { fill: #8ff0c9; } .r23-s { fill: #5fd4a8; }
+    .r4-box { fill: #221d3a; stroke: #9b91e8; }
+    .r4-h   { fill: #cfc8f7; } .r4-s { fill: #aba2ee; }
+  }
 </style>
 
-<rect x="50" y="40" width="580" height="260" rx="10" fill="none" stroke="#a8a69c" stroke-width="0.75" stroke-dasharray="5 4"/>
+<rect class="bg" x="0" y="0" width="680" height="500"/>
+
+<rect class="area-box" x="50" y="40" width="580" height="260" rx="10"/>
 <text class="area-label" x="65" y="63">Area 49.0001 &#8212; Level 1</text>
 
-<rect x="220" y="345" width="240" height="110" rx="10" fill="none" stroke="#a8a69c" stroke-width="0.75" stroke-dasharray="5 4"/>
+<rect class="area-box" x="220" y="345" width="240" height="110" rx="10"/>
 <text class="area-label" x="235" y="368">Area 49.0002</text>
 
-<line x1="300" y1="140" x2="230" y2="195" stroke="#6b6a65" stroke-width="1.25"/>
-<line x1="380" y1="140" x2="450" y2="195" stroke="#6b6a65" stroke-width="1.25"/>
-<line x1="250" y1="225" x2="430" y2="225" stroke="#3d3d3b" stroke-width="2.5"/>
-<line x1="210" y1="255" x2="300" y2="375" stroke="#6b6a65" stroke-width="1.25" stroke-dasharray="6 4"/>
-<line x1="470" y1="255" x2="380" y2="375" stroke="#6b6a65" stroke-width="1.25" stroke-dasharray="6 4"/>
+<line class="link"    x1="300" y1="140" x2="230" y2="195"/>
+<line class="link"    x1="380" y1="140" x2="450" y2="195"/>
+<line class="link-bb" x1="250" y1="225" x2="430" y2="225"/>
+<line class="link-l2" x1="210" y1="255" x2="300" y2="375"/>
+<line class="link-l2" x1="470" y1="255" x2="380" y2="375"/>
 
 <text class="ts" x="250" y="167" text-anchor="middle">L1</text>
 <text class="ts" x="430" y="167" text-anchor="middle">L1</text>
@@ -27,34 +61,33 @@
 <text class="ts" x="450" y="269" text-anchor="middle">L2</text>
 
 <g>
-<rect x="260" y="80" width="160" height="60" rx="10" fill="#ECEAE2" stroke="#8a8880" stroke-width="0.75"/>
-<text class="th" x="340" y="102" text-anchor="middle">R1</text>
-<text class="ts" x="340" y="122" text-anchor="middle">1.1.1.1 &#183; L1-only</text>
+<rect class="r1-box" x="260" y="80" width="160" height="60" rx="10"/>
+<text class="th r1-h" x="340" y="102" text-anchor="middle">R1</text>
+<text class="ts r1-s" x="340" y="122" text-anchor="middle">1.1.1.1 &#183; L1-only</text>
 </g>
 
 <g>
-<rect x="90" y="195" width="160" height="60" rx="10" fill="#DCF3EA" stroke="#12876a" stroke-width="0.75"/>
-<text class="th" x="170" y="217" text-anchor="middle" fill="#085041">R2</text>
-<text class="ts" x="170" y="237" text-anchor="middle" fill="#0f6e56">2.2.2.2 &#183; L1-2</text>
+<rect class="r23-box" x="90" y="195" width="160" height="60" rx="10"/>
+<text class="th r23-h" x="170" y="217" text-anchor="middle">R2</text>
+<text class="ts r23-s" x="170" y="237" text-anchor="middle">2.2.2.2 &#183; L1-2</text>
 </g>
 
 <g>
-<rect x="430" y="195" width="160" height="60" rx="10" fill="#DCF3EA" stroke="#12876a" stroke-width="0.75"/>
-<text class="th" x="510" y="217" text-anchor="middle" fill="#085041">R3</text>
-<text class="ts" x="510" y="237" text-anchor="middle" fill="#0f6e56">3.3.3.3 &#183; L1-2</text>
+<rect class="r23-box" x="430" y="195" width="160" height="60" rx="10"/>
+<text class="th r23-h" x="510" y="217" text-anchor="middle">R3</text>
+<text class="ts r23-s" x="510" y="237" text-anchor="middle">3.3.3.3 &#183; L1-2</text>
 </g>
 
 <g>
-<rect x="260" y="375" width="160" height="60" rx="10" fill="#E9E7FD" stroke="#6b62c9" stroke-width="0.75"/>
-<text class="th" x="340" y="397" text-anchor="middle" fill="#26215c">R4</text>
-<text class="ts" x="340" y="417" text-anchor="middle" fill="#3c3489">4.4.4.4 &#183; L1-2</text>
+<rect class="r4-box" x="260" y="375" width="160" height="60" rx="10"/>
+<text class="th r4-h" x="340" y="397" text-anchor="middle">R4</text>
+<text class="ts r4-s" x="340" y="417" text-anchor="middle">4.4.4.4 &#183; L1-2</text>
 </g>
 
-<rect x="60" y="468" width="14" height="14" rx="3" fill="#ECEAE2" stroke="#8a8880" stroke-width="0.75"/>
-<text class="ts" x="80" y="479">L1-only</text>
-<rect x="190" y="468" width="14" height="14" rx="3" fill="#DCF3EA" stroke="#12876a" stroke-width="0.75"/>
+<rect class="r1-box"  x="60"  y="468" width="14" height="14" rx="3"/>
+<text class="ts" x="80"  y="479">L1-only</text>
+<rect class="r23-box" x="190" y="468" width="14" height="14" rx="3"/>
 <text class="ts" x="210" y="479">L1-2 boundary</text>
-<rect x="340" y="468" width="14" height="14" rx="3" fill="#E9E7FD" stroke="#6b62c9" stroke-width="0.75"/>
+<rect class="r4-box"  x="340" y="468" width="14" height="14" rx="3"/>
 <text class="ts" x="360" y="479">L1-2, area 49.0002</text>
 </svg>
-
