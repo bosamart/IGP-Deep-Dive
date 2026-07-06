@@ -43,23 +43,32 @@ once and you never see that contrast — which is the whole lesson. Each phase b
 The `configs/*.txt` files are the **final state**; each line is tagged with the `! Phase N` that
 introduced it, so they double as an answer key for path B.
 
-### The IOS-XR workflow (do this for every ► Configure block)
+### The paste ritual (do this for every phase)
 
-IOS-XR stages changes in a **candidate buffer** and applies them only on `commit` — so a whole
-phase lands as one atomic change you can verify cleanly.
+New to IOS-XR? This is the exact loop you repeat in **every** phase below. XR stages your edits in a
+**candidate buffer** and applies them only on `commit`, so a whole phase lands as one clean, atomic
+change you can verify:
+
+1. **Pick the router** the block is labelled for (each phase lists them, e.g. **R1**, **R2**…).
+2. On that router, type `config` (or `configure terminal`). **Nothing is live yet** — you're editing
+   a *candidate* copy.
+3. **Paste that router's block** for the phase.
+4. Type `commit`. **This is the moment it goes live.** (Made a mess? Type `abort` — it discards the
+   candidate and changes nothing.)
+5. Type `end` to leave config mode, then move to the next router the phase lists.
+6. When every router in the phase is done, run that phase's **Verify** commands before moving on.
 
 ```
-configure terminal          ! (or just: config)
+config
   ... paste the phase block ...
-commit                      ! nothing takes effect until here
+commit          ! nothing takes effect until here
 end
 ```
 
 - **New XRv interfaces can come up admin-down** — the blocks include `no shutdown`; keep it when
   pasting a fresh node.
-- Made a mess mid-phase? `abort` throws away the uncommitted candidate. After a commit, roll back
-  with `rollback configuration last 1`.
-- Watch a change live: `show configuration commit changes last 1`.
+- Already committed and want it gone? `rollback configuration last 1`.
+- See exactly what a commit changed: `show configuration commit changes last 1`.
 
 ---
 
@@ -178,6 +187,9 @@ circuits. Loopbacks are `passive` (advertised, but form no adjacency).
 
 <details>
 <summary><b>► Configure Phase 1 — paste per device</b></summary>
+
+*First time? → follow [the paste ritual](#the-paste-ritual-do-this-for-every-phase).*
+**Paste order:** R1 → R2 → R3 → R4 (paste each router's block, `commit`, then the next).
 
 **R1**
 ```
@@ -381,6 +393,9 @@ and break TE/SR extensions. Set wide on day one, then give every link an explici
 <details>
 <summary><b>► Configure Phase 2 — add wide metrics + per-link metric (all devices)</b></summary>
 
+*First time? → follow [the paste ritual](#the-paste-ritual-do-this-for-every-phase).*
+**Paste order:** R1 → R2 → R3 → R4 (all four routers change this phase).
+
 **R1**
 ```
 router isis CORE
@@ -511,6 +526,9 @@ NET and adding the new one.
 <details>
 <summary><b>► Configure Phase 3 — introduce levels + move R4 to area 49.0002</b></summary>
 
+*First time? → follow [the paste ritual](#the-paste-ritual-do-this-for-every-phase).*
+**Paste order:** R1 → R2 → R3 → R4 (all four change; expect adjacencies to briefly drop as levels/areas shift).
+
 **R1** — become Level-1 only; both links are L1
 ```
 router isis CORE
@@ -605,6 +623,9 @@ won't push it back up into L2. Leak deliberately and sparingly.
 <details>
 <summary><b>► Configure Phase 4 — leak 4.4.4.4/32 into L1 (R2 and R3 only — identical)</b></summary>
 
+*First time? → follow [the paste ritual](#the-paste-ritual-do-this-for-every-phase).*
+**Paste order:** R2, then R3 (only the two boundary routers — the exact same block on each).
+
 **R2 and R3** (paste the same block on each)
 ```
 prefix-set LEAKED-FROM-L2
@@ -666,6 +687,9 @@ authenticates level 1; the L1-2 routers authenticate both levels.
 
 <details>
 <summary><b>► Configure Phase 5 — BFD + LFA + throttle + auth (all devices)</b></summary>
+
+*First time? → follow [the paste ritual](#the-paste-ritual-do-this-for-every-phase).*
+**Paste order:** R1 → R2 → R3 → R4 (all four). The auth keys must match on both ends of every link, or the adjacency drops.
 
 **R1**
 ```
