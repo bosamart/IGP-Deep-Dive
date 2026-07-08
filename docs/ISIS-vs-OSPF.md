@@ -57,7 +57,7 @@ networks run it.
 
 ## The bottom line for you
 
-You're heading into a service-provider carrier (Cellcard) on IOS-XR. **IS-IS is the SP-core default**
+You're heading into a service-provider carrier on IOS-XR. **IS-IS is the SP-core default**
 — single instance for v4/v6/SR, transport-agnostic, flexible areas. Master IS-IS deeply; keep OSPF
 solid enough to design, troubleshoot, and pass interviews/certs. This lab gives you both on one map
 so the comparison is concrete, not theoretical.

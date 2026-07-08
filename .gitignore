@@ -1,1 +1,35 @@
 HANDOFF.md
+
+# --- Private files (convention: *.private.* or a private/ folder) ---
+private/
+*.private.*
+*-private.*
+PRIVATE*
+
+# --- Credentials & secrets ---
+.env
+.env.*
+*.pem
+*.key
+*.token
+*credentials*
+*secret*
+inventory*.yaml
+inventory*.ini
+
+# --- Work-data safety net (public repo; work stays sanitized) ---
+# Force-add a genuinely safe file with: git add -f <file>
+*work-notes*
+*internal*
+
+# --- Junk ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+*.tmp
+*.bak
